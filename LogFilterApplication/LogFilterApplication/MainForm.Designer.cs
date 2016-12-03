@@ -36,7 +36,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.defaultSIDs = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tbUnknownSID = new System.Windows.Forms.TextBox();
             this.btnFilter = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -83,7 +83,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnFilter);
-            this.groupBox2.Controls.Add(this.textBox2);
+            this.groupBox2.Controls.Add(this.tbUnknownSID);
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Controls.Add(this.defaultSIDs);
             this.groupBox2.Controls.Add(this.label2);
@@ -123,20 +123,22 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 73);
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(12, 74);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(208, 40);
             this.textBox1.TabIndex = 2;
-            this.textBox1.Text = "Please enter the SID you would like to find if it is not listed above";
+            this.textBox1.Text = "Please enter the SID you would like to find in this box if it is not listed above" +
+    "";
             // 
-            // textBox2
+            // tbUnknownSID
             // 
-            this.textBox2.Location = new System.Drawing.Point(12, 120);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 3;
+            this.tbUnknownSID.Location = new System.Drawing.Point(12, 120);
+            this.tbUnknownSID.Name = "tbUnknownSID";
+            this.tbUnknownSID.Size = new System.Drawing.Size(100, 20);
+            this.tbUnknownSID.TabIndex = 3;
             // 
             // btnFilter
             // 
@@ -173,7 +175,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btnFilter;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tbUnknownSID;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ComboBox defaultSIDs;
         private System.Windows.Forms.Label label2;

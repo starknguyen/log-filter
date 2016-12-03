@@ -44,7 +44,23 @@ namespace LogFilterApplication
 
         private void btnFilter_Click(object sender, EventArgs e)
         {
-            SidToFind = defaultSIDs.SelectedItem.ToString();
+            if (tbInputFileLocation.Text == string.Empty)
+            {
+                MessageBox.Show(this, "Please choose log file to filter", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            else
+            {
+                if (tbUnknownSID.Text == string.Empty && Convert.ToInt16(defaultSIDs.SelectedIndex) != -1)
+                    SidToFind = defaultSIDs.SelectedItem.ToString();
+                else if (tbUnknownSID.Text != string.Empty && Convert.ToInt16(defaultSIDs.SelectedIndex) == -1)
+                    SidToFind = tbUnknownSID.Text;
+                else
+                {
+                    MessageBox.Show(this, "Please choose filter condition!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+            }
 
             List<string> linesLog = new List<string>();
             linesLog = File.ReadAllLines(InputFileLocation).ToList();
@@ -94,7 +110,9 @@ namespace LogFilterApplication
             }
             else
             {
-                MessageBox.Show("SID is not found in this log file");
+                MessageBox.Show(this, "SID is not found in this log file", "Information", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                defaultSIDs.SelectedIndex = -1;
             }
         }
     }
