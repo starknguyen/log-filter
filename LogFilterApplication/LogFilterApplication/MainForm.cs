@@ -23,7 +23,7 @@ namespace LogFilterApplication
         private StringBuilder logContent;
         #endregion
 
-        SIDDefinition objectSID = new SIDDefinition();
+        SIDDefinition objectSID = new SIDDefinition(29); // current Excel data has 29 rows
 
         public MainForm()
         {
@@ -90,7 +90,8 @@ namespace LogFilterApplication
             {
                 try
                 {
-                    objectSID.AvailableSIDs.TryGetValue(SidToFind, out SidInformation);
+                    Dictionary<string, string> AvailableSIDs = objectSID.GetAvailableSIDs;
+                    AvailableSIDs.TryGetValue(SidToFind, out SidInformation);
 
                     // Output file at same directory of input file
                     OutputFileLocation = InputFilePath + "\\" + SidInformation
