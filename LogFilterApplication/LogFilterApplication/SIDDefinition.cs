@@ -16,21 +16,6 @@ namespace LogFilterApplication
         private OrderedDictionary SID_Mapping_Description = new OrderedDictionary();
 
         /// <summary>
-        /// Method SID_Mapping_Description to get AvailableSIDs
-        /// </summary>
-        public List<KeyValuePair<string, string>> GetAvailableSIDs
-        {
-            get
-            {
-                return this.AvailableSIDs;
-            }
-            set
-            {
-                this.AvailableSIDs = value;
-            }
-        }
-
-        /// <summary>
         /// Method GetSIDMappedDescription to get SID_Mapping_Description
         /// </summary>
         public OrderedDictionary GetSIDMappedDescription

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -21,7 +22,9 @@ namespace LogFilterApplication
         private string SidToFind;
         private string SidInformation;
 
-        private StringBuilder logContent;
+        private OrderedDictionary SID_Description = new OrderedDictionary();
+
+        private StringBuilder logContent;        
         #endregion
 
         SIDDefinition objectSID = new SIDDefinition(29); // current Excel data has 29 rows        
@@ -33,7 +36,7 @@ namespace LogFilterApplication
         {
             InitializeComponent();
 
-            OrderedDictionary SID_Description = objectSID.GetSIDMappedDescription;
+            SID_Description = objectSID.GetSIDMappedDescription;
             defaultSIDs.Items.Clear();  // clear first
             for (int i = 0; i < SID_Description.Count; i++)
             {
@@ -73,15 +76,30 @@ namespace LogFilterApplication
             else
             {
                 if (tbUnknownSID.Text == string.Empty && Convert.ToInt16(defaultSIDs.SelectedIndex) != -1)
-                    SidToFind = defaultSIDs.SelectedItem.ToString();
+                {
+                    SidToFind = defaultSIDs.SelectedItem.ToString(); // User chooses SID from ComboBox
+                    
+                    // SID in ComboBox is the value in SID_Description, we need to know its key
+                    foreach (DictionaryEntry de in SID_Description)
+                    {
+                        if (SidToFind == de.Value.ToString())
+                        {
+                            KeyValuePair<string, string> Abbrev_SID = (KeyValuePair<string, string>)de.Key;
+                            SidToFind = Abbrev_SID.Key; // mapping back
+                            SidInformation = Abbrev_SID.Value;
+                            break;
+                        }
+                    }
+                }
                 else if (tbUnknownSID.Text != string.Empty && Convert.ToInt16(defaultSIDs.SelectedIndex) == -1)
-                    SidToFind = tbUnknownSID.Text;
+                    SidToFind = tbUnknownSID.Text;  // User enters SID value not listed in ComboBox
                 else
                 {
                     MessageBox.Show(this, "Please choose filter condition!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
             }
+  
 
             List<string> linesLog = new List<string>();
             linesLog = File.ReadAllLines(InputFileLocation).ToList();
@@ -95,8 +113,7 @@ namespace LogFilterApplication
                 {
                     elements = linesLog[i].Split(',');
                     if (elements.Contains(SidToFind))
-                    {
-                        //Console.WriteLine("Found");                        
+                    {                     
                         logContent.AppendLine(elements[0] + ',' + elements[1] + ',' + elements[2]);
                         isElementFound = true;
                     }

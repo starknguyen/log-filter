@@ -89,14 +89,14 @@
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Location = new System.Drawing.Point(26, 125);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(762, 100);
+            this.groupBox2.Size = new System.Drawing.Size(369, 180);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter Log File";
             // 
             // btnFilter
             // 
-            this.btnFilter.Location = new System.Drawing.Point(681, 35);
+            this.btnFilter.Location = new System.Drawing.Point(234, 78);
             this.btnFilter.Name = "btnFilter";
             this.btnFilter.Size = new System.Drawing.Size(75, 23);
             this.btnFilter.TabIndex = 4;
@@ -106,7 +106,7 @@
             // 
             // tbUnknownSID
             // 
-            this.tbUnknownSID.Location = new System.Drawing.Point(480, 37);
+            this.tbUnknownSID.Location = new System.Drawing.Point(9, 124);
             this.tbUnknownSID.Name = "tbUnknownSID";
             this.tbUnknownSID.Size = new System.Drawing.Size(168, 20);
             this.tbUnknownSID.TabIndex = 3;
@@ -114,7 +114,7 @@
             // textBox1
             // 
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(264, 36);
+            this.textBox1.Location = new System.Drawing.Point(9, 78);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
@@ -137,13 +137,13 @@
             "7ec.622005.24"});
             this.defaultSIDs.Location = new System.Drawing.Point(71, 36);
             this.defaultSIDs.Name = "defaultSIDs";
-            this.defaultSIDs.Size = new System.Drawing.Size(170, 21);
+            this.defaultSIDs.Size = new System.Drawing.Size(238, 21);
             this.defaultSIDs.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 36);
+            this.label2.Location = new System.Drawing.Point(6, 39);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(25, 13);
             this.label2.TabIndex = 0;
