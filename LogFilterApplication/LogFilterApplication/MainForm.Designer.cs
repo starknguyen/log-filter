@@ -33,11 +33,11 @@
             this.tbInputFileLocation = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.defaultSIDs = new System.Windows.Forms.ComboBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.tbUnknownSID = new System.Windows.Forms.TextBox();
             this.btnFilter = new System.Windows.Forms.Button();
+            this.tbUnknownSID = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.defaultSIDs = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -89,19 +89,38 @@
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Location = new System.Drawing.Point(26, 125);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(345, 204);
+            this.groupBox2.Size = new System.Drawing.Size(762, 100);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter Log File";
             // 
-            // label2
+            // btnFilter
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 36);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(25, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "SID";
+            this.btnFilter.Location = new System.Drawing.Point(681, 35);
+            this.btnFilter.Name = "btnFilter";
+            this.btnFilter.Size = new System.Drawing.Size(75, 23);
+            this.btnFilter.TabIndex = 4;
+            this.btnFilter.Text = "Filter";
+            this.btnFilter.UseVisualStyleBackColor = true;
+            this.btnFilter.Click += new System.EventHandler(this.btnFilter_Click);
+            // 
+            // tbUnknownSID
+            // 
+            this.tbUnknownSID.Location = new System.Drawing.Point(480, 37);
+            this.tbUnknownSID.Name = "tbUnknownSID";
+            this.tbUnknownSID.Size = new System.Drawing.Size(168, 20);
+            this.tbUnknownSID.TabIndex = 3;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(264, 36);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(208, 40);
+            this.textBox1.TabIndex = 2;
+            this.textBox1.Text = "Please enter the SID you would like to find in this box if it is not listed";
             // 
             // defaultSIDs
             // 
@@ -118,43 +137,23 @@
             "7ec.622005.24"});
             this.defaultSIDs.Location = new System.Drawing.Point(71, 36);
             this.defaultSIDs.Name = "defaultSIDs";
-            this.defaultSIDs.Size = new System.Drawing.Size(121, 21);
+            this.defaultSIDs.Size = new System.Drawing.Size(170, 21);
             this.defaultSIDs.TabIndex = 1;
             // 
-            // textBox1
+            // label2
             // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(12, 74);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(208, 40);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Text = "Please enter the SID you would like to find in this box if it is not listed above" +
-    "";
-            // 
-            // tbUnknownSID
-            // 
-            this.tbUnknownSID.Location = new System.Drawing.Point(12, 120);
-            this.tbUnknownSID.Name = "tbUnknownSID";
-            this.tbUnknownSID.Size = new System.Drawing.Size(100, 20);
-            this.tbUnknownSID.TabIndex = 3;
-            // 
-            // btnFilter
-            // 
-            this.btnFilter.Location = new System.Drawing.Point(12, 158);
-            this.btnFilter.Name = "btnFilter";
-            this.btnFilter.Size = new System.Drawing.Size(75, 23);
-            this.btnFilter.TabIndex = 4;
-            this.btnFilter.Text = "Filter";
-            this.btnFilter.UseVisualStyleBackColor = true;
-            this.btnFilter.Click += new System.EventHandler(this.btnFilter_Click);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 36);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(25, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "SID";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(638, 372);
+            this.ClientSize = new System.Drawing.Size(832, 372);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "MainForm";

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -23,13 +24,28 @@ namespace LogFilterApplication
         private StringBuilder logContent;
         #endregion
 
-        SIDDefinition objectSID = new SIDDefinition(29); // current Excel data has 29 rows
+        SIDDefinition objectSID = new SIDDefinition(29); // current Excel data has 29 rows        
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public MainForm()
         {
-            InitializeComponent();            
+            InitializeComponent();
+
+            OrderedDictionary SID_Description = objectSID.GetSIDMappedDescription;
+            defaultSIDs.Items.Clear();  // clear first
+            for (int i = 0; i < SID_Description.Count; i++)
+            {
+                defaultSIDs.Items.Add(SID_Description[i]);
+            }
         }
 
+        /// <summary>
+        /// Button Browse click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnBrowseInputFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -42,6 +58,11 @@ namespace LogFilterApplication
             }
         }
 
+        /// <summary>
+        /// Button Filter click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnFilter_Click(object sender, EventArgs e)
         {
             if (tbInputFileLocation.Text == string.Empty)
@@ -83,15 +104,15 @@ namespace LogFilterApplication
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error while reading log file: " + ex.Message);
+                MessageBox.Show(this, "Error while reading log file: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
 
             if (isElementFound)
             {
                 try
                 {
-                    Dictionary<string, string> AvailableSIDs = objectSID.GetAvailableSIDs;
-                    AvailableSIDs.TryGetValue(SidToFind, out SidInformation);
+                    //AvailableSIDs.TryGetValue(SidToFind, out SidInformation);
 
                     // Output file at same directory of input file
                     OutputFileLocation = InputFilePath + "\\" + SidInformation
@@ -103,7 +124,8 @@ namespace LogFilterApplication
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error while writing filtered file: " + ex.Message);
+                    MessageBox.Show(this, "Error while writing filtered file: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
 
                 MessageBox.Show(this, "File has been filtered successfully!", "Information",
