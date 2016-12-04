@@ -20,9 +20,15 @@ namespace LogFilterApplication
         private string InputFileName;
         private string OutputFileLocation;
         private string SidToFind;
+        private string AbbrevSidToFind;
         private string SidInformation;
 
         private OrderedDictionary SID_Description = new OrderedDictionary();
+        private OrderedDictionary SID_Decimal = new OrderedDictionary();
+        private OrderedDictionary SID_Unit = new OrderedDictionary();
+
+        private int DecimalDiv = 1;
+        private string OutputUnit;
 
         private StringBuilder logContent;        
         #endregion
@@ -85,9 +91,27 @@ namespace LogFilterApplication
                         if (SidToFind == de.Value.ToString())
                         {
                             KeyValuePair<string, string> Abbrev_SID = (KeyValuePair<string, string>)de.Key;
-                            SidToFind = Abbrev_SID.Key; // mapping back
+                            AbbrevSidToFind = Abbrev_SID.Key; // mapping back
                             SidInformation = Abbrev_SID.Value;
                             break;
+                        }
+                    }
+
+                    SID_Decimal = objectSID.GetSIDMappedDecimal;
+                    foreach (DictionaryEntry de in SID_Decimal)
+                    {
+                        if (SidToFind == de.Key.ToString())
+                        {
+                            DecimalDiv = Convert.ToInt32(de.Value);
+                        }
+                    }
+
+                    SID_Unit = objectSID.GetSIDMappedUnit;
+                    foreach (DictionaryEntry de in SID_Unit)
+                    {
+                        if (SidToFind == de.Key.ToString())
+                        {
+                            OutputUnit = de.Value.ToString();
                         }
                     }
                 }
@@ -112,7 +136,7 @@ namespace LogFilterApplication
                 for (int i = 1; i < linesLog.Capacity; i++) // ignore first line
                 {
                     elements = linesLog[i].Split(',');
-                    if (elements.Contains(SidToFind))
+                    if (elements.Contains(AbbrevSidToFind))
                     {                     
                         logContent.AppendLine(elements[0] + ',' + elements[1] + ',' + elements[2]);
                         isElementFound = true;
@@ -129,8 +153,6 @@ namespace LogFilterApplication
             {
                 try
                 {
-                    //AvailableSIDs.TryGetValue(SidToFind, out SidInformation);
-
                     // Output file at same directory of input file
                     OutputFileLocation = InputFilePath + "\\" + SidInformation
                                         + "_from_" + InputFileName + "_filtered.log";

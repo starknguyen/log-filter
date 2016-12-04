@@ -14,6 +14,8 @@ namespace LogFilterApplication
     {
         private List<KeyValuePair<string, string>> AvailableSIDs = new List<KeyValuePair<string, string>>();
         private OrderedDictionary SID_Mapping_Description = new OrderedDictionary();
+        private OrderedDictionary SID_Mapping_Decimal = new OrderedDictionary();
+        private OrderedDictionary SID_Mapping_Unit = new OrderedDictionary();
 
         /// <summary>
         /// Method GetSIDMappedDescription to get SID_Mapping_Description
@@ -27,6 +29,38 @@ namespace LogFilterApplication
             set
             {
                 this.SID_Mapping_Description = value;
+            }
+        }
+
+        /// <summary>
+        /// Method GetSIDMappedDecimal to get SID_Mapping_Decimal
+        /// </summary>
+        public OrderedDictionary GetSIDMappedDecimal
+        {
+            get
+            {
+                return SID_Mapping_Decimal;
+            }
+
+            set
+            {
+                SID_Mapping_Decimal = value;
+            }
+        }
+
+        /// <summary>
+        /// Method GetSIDMappedUnit to get SID_Mapping_Unit
+        /// </summary>
+        public OrderedDictionary GetSIDMappedUnit
+        {
+            get
+            {
+                return SID_Mapping_Unit;
+            }
+
+            set
+            {
+                SID_Mapping_Unit = value;
             }
         }
 
@@ -49,10 +83,13 @@ namespace LogFilterApplication
             int rowCount = xlRange.Rows.Count;
             int colCount = xlRange.Columns.Count;
 
+            // Variables for position of each data column
             int nrPos = 0;
             int abbrPos = 0;
-            int descPos = 0;
+            int descPos = 0, desPosIndex = 0;
             int sidPos = 0;
+            int decPos = 0, decPosIndex = 0;
+            int unitPos = 0, unitPosIndex = 0;
 
             int rowIndex = 1;
 
@@ -66,19 +103,6 @@ namespace LogFilterApplication
                     {
                         if (xlRange.Cells[i, j].Value2 != null)
                         {
-                            if (xlRange.Cells[i, j].Value2.Contains("Abkürzung"))
-                            {
-                                abbrPos = j;    // Detect position index of column "Abkürzung"
-                            }
-                            if (xlRange.Cells[i, j].Value2.Contains("Beschreibung"))
-                            {
-                                descPos = j;    // Detect position index of column "Abkürzung"
-                            }
-                            if (xlRange.Cells[i, j].Value2.Contains("SID"))
-                            {
-                                sidPos = j;     // Detect position index of column "SID"
-                                rowIndex = i + 1; // Detect position index of row 
-                            }
                             if (xlRange.Cells[i, j].Value2.Contains("Nr"))
                             {
                                 nrPos = j;    // Detect position index of column "Nr.:"
@@ -93,12 +117,35 @@ namespace LogFilterApplication
                                     }
                                 }
                             }
+                            if (xlRange.Cells[i, j].Value2.Contains("Abkürzung"))
+                            {
+                                abbrPos = j;    // Detect position index of column "Abkürzung"
+                            }
+                            if (xlRange.Cells[i, j].Value2.Contains("Beschreibung"))
+                            {
+                                descPos = j;    // Detect position index of column "Abkürzung"
+                            }
+                            if (xlRange.Cells[i, j].Value2.Contains("SID"))
+                            {
+                                sidPos = j;     // Detect position index of column "SID"
+                                rowIndex = i + 1; // Detect position index of row 
+                            }
+                            if (xlRange.Cells[i, j].Value2.Contains("Decimal"))
+                            {
+                                decPos = j;    // Detect position index of column "Abkürzung"
+                            }
+                            if (xlRange.Cells[i, j].Value2.Contains("Unit"))
+                            {
+                                unitPos = j;    // Detect position index of column "Abkürzung"
+                            }
                         }
                         
-                        if (abbrPos > 0 && sidPos > 0 && nrPos > 0 && descPos > 0)
+                        if (abbrPos > 0 && sidPos > 0 && nrPos > 0 && descPos > 0 &&
+                            decPos > 0 && unitPos > 0)
                             break; // end loop column when these values has been found
                     }
-                    if (abbrPos > 0 && sidPos > 0 && nrPos > 0 && descPos > 0)
+                    if (abbrPos > 0 && sidPos > 0 && nrPos > 0 && descPos > 0 &&
+                        decPos > 0 && unitPos > 0)
                         break; // end loop row when these values has been found
                 }
             }
@@ -125,13 +172,22 @@ namespace LogFilterApplication
                     }
                 }
 
-                j = 0;
                 for (i = rowIndex; i < rowCount; i++)
                 {
                     if (xlRange.Cells[i, descPos].Value2 != null && xlRange.Cells[i, descPos].Interior.ColorIndex == 2)
                     {
-                        SID_Mapping_Description.Add(AvailableSIDs[j], xlRange.Cells[i, descPos].Value2.ToString());
-                        j++;
+                        SID_Mapping_Description.Add(AvailableSIDs[desPosIndex], xlRange.Cells[i, descPos].Value2.ToString());
+                        desPosIndex++;
+                    }
+                    if (xlRange.Cells[i, decPos].Value2 != null && xlRange.Cells[i, decPos].Interior.ColorIndex == 2)
+                    {
+                        SID_Mapping_Decimal.Add(xlRange.Cells[i, descPos].Value2.ToString(), xlRange.Cells[i, decPos].Value2.ToString());
+                        decPosIndex++;
+                    }
+                    if (xlRange.Cells[i, unitPos].Value2 != null && xlRange.Cells[i, unitPos].Interior.ColorIndex == 2)
+                    {
+                        SID_Mapping_Unit.Add(xlRange.Cells[i, descPos].Value2.ToString(), xlRange.Cells[i, unitPos].Value2.ToString());
+                        unitPosIndex++;
                     }
                 }
             }
