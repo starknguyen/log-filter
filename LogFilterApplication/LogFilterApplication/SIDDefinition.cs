@@ -71,7 +71,8 @@ namespace LogFilterApplication
         public SIDDefinition(int dataRowLength)
         {
             // Data source location
-            string dataSourceLocation = "D:\\Workplace\\Git Repository\\log-filter\\LogFilterApplication\\LogFilterApplication\\Data Sources\\Messstellenliste Renault ZOE.xlsx";
+            //string dataSourceLocation = "D:\\Workplace\\Git Repository\\log-filter\\LogFilterApplication\\LogFilterApplication\\Data Sources\\Messstellenliste Renault ZOE.xlsx";
+            string dataSourceLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Data Sources\\Messstellenliste Renault ZOE.xlsx";
             int i = 1, j = 1;
 
             //Create COM Objects. Create a COM object for everything that is referenced
