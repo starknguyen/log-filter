@@ -141,8 +141,7 @@ namespace LogFilterApplication
                     if (elements.Contains(AbbrevSidToFind))
                     {
                         // Processing output format
-                        if (DecimalDiv != 0)
-                            elements[2] = ExtensionMethods.ShiftDecimalPoint(Convert.ToDouble(elements[2]), DecimalDiv);
+                        elements[2] = ExtensionMethods.ShiftDecimalPoint(Convert.ToDouble(elements[2]), DecimalDiv);
                                          
                         logContent.AppendLine(elements[0] + ',' + elements[1] + ',' + elements[2] + " " + OutputUnit);
                         isElementFound = true;
