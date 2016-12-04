@@ -103,6 +103,7 @@ namespace LogFilterApplication
                         if (SidToFind == de.Key.ToString())
                         {
                             DecimalDiv = Convert.ToInt32(de.Value);
+                            break;
                         }
                     }
 
@@ -112,6 +113,7 @@ namespace LogFilterApplication
                         if (SidToFind == de.Key.ToString())
                         {
                             OutputUnit = de.Value.ToString();
+                            break;
                         }
                     }
                 }
@@ -137,8 +139,12 @@ namespace LogFilterApplication
                 {
                     elements = linesLog[i].Split(',');
                     if (elements.Contains(AbbrevSidToFind))
-                    {                     
-                        logContent.AppendLine(elements[0] + ',' + elements[1] + ',' + elements[2]);
+                    {
+                        // Processing output format
+                        if (DecimalDiv != 0)
+                            elements[2] = ExtensionMethods.ShiftDecimalPoint(Convert.ToDouble(elements[2]), DecimalDiv);
+                                         
+                        logContent.AppendLine(elements[0] + ',' + elements[1] + ',' + elements[2] + " " + OutputUnit);
                         isElementFound = true;
                     }
                 }
