@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Collections.Specialized;
 
 namespace LogFilterApplication
 {
     public class SIDDefinition
     {
-        private Dictionary<string, string> AvailableSIDs = new Dictionary<string, string>();
+        private List<KeyValuePair<string, string>> AvailableSIDs = new List<KeyValuePair<string, string>>();
+        private OrderedDictionary SID_Mapping_Description = new OrderedDictionary();
 
         /// <summary>
-        /// Method to get AvailableSIDs
+        /// Method SID_Mapping_Description to get AvailableSIDs
         /// </summary>
-        public Dictionary<string, string> GetAvailableSIDs
+        public List<KeyValuePair<string, string>> GetAvailableSIDs
         {
             get
             {
@@ -24,6 +27,21 @@ namespace LogFilterApplication
             set
             {
                 this.AvailableSIDs = value;
+            }
+        }
+
+        /// <summary>
+        /// Method GetSIDMappedDescription to get SID_Mapping_Description
+        /// </summary>
+        public OrderedDictionary GetSIDMappedDescription
+        {
+            get
+            {
+                return this.SID_Mapping_Description;
+            }
+            set
+            {
+                this.SID_Mapping_Description = value;
             }
         }
 
@@ -46,9 +64,10 @@ namespace LogFilterApplication
             int rowCount = xlRange.Rows.Count;
             int colCount = xlRange.Columns.Count;
 
-            int abbrPos = 0;
-            int sidPos = 0;
             int nrPos = 0;
+            int abbrPos = 0;
+            int descPos = 0;
+            int sidPos = 0;
 
             int rowIndex = 1;
 
@@ -60,34 +79,42 @@ namespace LogFilterApplication
                 {
                     for (j = 1; j <= colCount; j++)
                     {
-                        if (xlRange.Cells[i, j].Value2 == "Abkürzung")
+                        if (xlRange.Cells[i, j].Value2 != null)
                         {
-                            abbrPos = j;    // Detect position index of column "Abkürzung"
-                        }
-                        if (xlRange.Cells[i, j].Value2 == "SID")
-                        {
-                            sidPos = j;     // Detect position index of column "SID"
-                            rowIndex = i + 1; // Detect position index of row 
-                        }
-                        if (xlRange.Cells[i, j].Value2 == "Nr.:")
-                        {
-                            nrPos = j;    // Detect position index of column "Nr.:"
-                            int rowStartData = i + 1;
-                            for (i = rowStartData; i < rowCount; i++)
+                            if (xlRange.Cells[i, j].Value2.Contains("Abkürzung"))
                             {
-                                if (xlRange.Cells[i, nrPos].Value2 == dataRowLength)
+                                abbrPos = j;    // Detect position index of column "Abkürzung"
+                            }
+                            if (xlRange.Cells[i, j].Value2.Contains("Beschreibung"))
+                            {
+                                descPos = j;    // Detect position index of column "Abkürzung"
+                            }
+                            if (xlRange.Cells[i, j].Value2.Contains("SID"))
+                            {
+                                sidPos = j;     // Detect position index of column "SID"
+                                rowIndex = i + 1; // Detect position index of row 
+                            }
+                            if (xlRange.Cells[i, j].Value2.Contains("Nr"))
+                            {
+                                nrPos = j;    // Detect position index of column "Nr.:"
+                                int rowStartData = i + 1;
+                                for (i = rowStartData; i < rowCount; i++)
                                 {
-                                    rowCount = i;
-                                    i = rowStartData - 1;
-                                    break; // end loop here
+                                    if (xlRange.Cells[i, nrPos].Value2 == dataRowLength)
+                                    {
+                                        rowCount = i;
+                                        i = rowStartData - 1;
+                                        break; // end loop here
+                                    }
                                 }
                             }
                         }
-                        if (abbrPos > 0 && sidPos > 0 && nrPos > 0)
-                            break; // end loop when these values has been found
+                        
+                        if (abbrPos > 0 && sidPos > 0 && nrPos > 0 && descPos > 0)
+                            break; // end loop column when these values has been found
                     }
-                    if (abbrPos > 0 && sidPos > 0 && nrPos > 0)
-                        break; // end loop when these values has been found
+                    if (abbrPos > 0 && sidPos > 0 && nrPos > 0 && descPos > 0)
+                        break; // end loop row when these values has been found
                 }
             }
             catch (Exception ex)
@@ -96,14 +123,31 @@ namespace LogFilterApplication
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
 
-            // Abkürzung is column abbrPos, SID is column sidPos
-            // Store data to dictionary
+        // Abkürzung is column abbrPos, SID is column sidPos
+        // Store data to KeyValuePair
+        // Available SIDs is categorized as "White color" cells in Excel data file
+        // For more information about ColorIndex property of Excel cell, read here: 
+        // https://msdn.microsoft.com/en-us/library/cc296089%28v=office.12%29.aspx?f=255&MSPPError=-2147217396#xlDiscoveringColorIndex_ColorIndexProperty
             try
             {
                 for (i = rowIndex; i < rowCount; i++)
                 {
-                    if (xlRange.Cells[i, sidPos].Value2 != null && xlRange.Cells[i, abbrPos].Value2 != null)
-                        AvailableSIDs.Add(xlRange.Cells[i, sidPos].Value2.ToString(), xlRange.Cells[i, abbrPos].Value2.ToString());
+                    if (xlRange.Cells[i, sidPos].Value2 != null && xlRange.Cells[i, abbrPos].Value2 != null && xlRange.Cells[i, descPos].Value2 != null &&
+                        xlRange.Cells[i, sidPos].Interior.ColorIndex == 2 && xlRange.Cells[i, abbrPos].Interior.ColorIndex == 2)
+                    {
+                        //AvailableSIDs.Add(xlRange.Cells[i, sidPos].Value2.ToString(), xlRange.Cells[i, abbrPos].Value2.ToString());                        
+                        AvailableSIDs.Add(new KeyValuePair<string, string>(xlRange.Cells[i, sidPos].Value2.ToString(), xlRange.Cells[i, abbrPos].Value2.ToString()));                        
+                    }
+                }
+
+                j = 0;
+                for (i = rowIndex; i < rowCount; i++)
+                {
+                    if (xlRange.Cells[i, descPos].Value2 != null && xlRange.Cells[i, descPos].Interior.ColorIndex == 2)
+                    {
+                        SID_Mapping_Description.Add(AvailableSIDs[j], xlRange.Cells[i, descPos].Value2.ToString());
+                        j++;
+                    }
                 }
             }
             catch (Exception ex)
@@ -139,6 +183,11 @@ namespace LogFilterApplication
                 MessageBox.Show("Error while closing data source file: " + ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
+        }
+
+        private void Mapping()
+        {
+
         }
     }
 }
