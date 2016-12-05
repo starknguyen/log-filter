@@ -33,7 +33,7 @@ namespace LogFilterApplication
         private StringBuilder logContent;        
         #endregion
 
-        SIDDefinition objectSID = new SIDDefinition(29); // current Excel data has 29 rows        
+        SIDDefinition objectSID = new SIDDefinition(); // current Excel data has 29 rows        
 
         /// <summary>
         /// Default constructor

@@ -68,7 +68,7 @@ namespace LogFilterApplication
         /// Constructor with length of data as parameter
         /// </summary>
         /// <param name="dataRowLength"></param>
-        public SIDDefinition(int dataRowLength)
+        public SIDDefinition()
         {
             // Data source location
             //string dataSourceLocation = "D:\\Workplace\\Git Repository\\log-filter\\LogFilterApplication\\LogFilterApplication\\Data Sources\\Messstellenliste Renault ZOE.xlsx";
@@ -81,8 +81,12 @@ namespace LogFilterApplication
             Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
             Excel.Range xlRange = xlWorksheet.UsedRange;
 
-            int rowCount = xlRange.Rows.Count;
-            int colCount = xlRange.Columns.Count;
+            // Total number of rows
+            int dataRowLength = xlRange.Cells.Find("*", System.Reflection.Missing.Value,
+            System.Reflection.Missing.Value, System.Reflection.Missing.Value, Excel.XlSearchOrder.xlByRows, Excel.XlSearchDirection.xlPrevious, false, System.Reflection.Missing.Value, System.Reflection.Missing.Value).Row;
+
+            // Total number of columns
+            int dataColumnLength = xlRange.Cells.Find("*", System.Reflection.Missing.Value, System.Reflection.Missing.Value, System.Reflection.Missing.Value, Excel.XlSearchOrder.xlByColumns, Excel.XlSearchDirection.xlPrevious, false, System.Reflection.Missing.Value, System.Reflection.Missing.Value).Column;
 
             // Variables for position of each data column
             int nrPos = 0;
@@ -92,29 +96,31 @@ namespace LogFilterApplication
             int decPos = 0, decPosIndex = 0;
             int unitPos = 0, unitPosIndex = 0;
 
-            int rowIndex = 1;
+            int rowStartData = 1;
 
             List<string> sidFromExcel = new List<string>();
 
             try
             {
-                for (i = 1; i <= rowCount; i++)
+                for (i = 1; i <= dataRowLength; i++)
                 {
-                    for (j = 1; j <= colCount; j++)
+                    for (j = 1; j <= dataColumnLength; j++)
                     {
                         if (xlRange.Cells[i, j].Value2 != null)
                         {
                             if (xlRange.Cells[i, j].Value2.Contains("Nr"))
                             {
                                 nrPos = j;    // Detect position index of column "Nr.:"
-                                int rowStartData = i + 1;
-                                for (i = rowStartData; i < rowCount; i++)
+                                for (int k = i; k <= dataRowLength; k++)
                                 {
-                                    if (xlRange.Cells[i, nrPos].Value2 == dataRowLength)
+                                    if (xlRange.Cells[k, nrPos].Value2 != null)
                                     {
-                                        rowCount = i;
-                                        i = rowStartData - 1;
-                                        break; // end loop here
+                                        if (xlRange.Cells[k, nrPos].Value2.ToString().Contains("1"))
+                                        {
+                                            // Found the first row of data
+                                            rowStartData = k;
+                                            break; 
+                                        }
                                     }
                                 }
                             }
@@ -129,7 +135,6 @@ namespace LogFilterApplication
                             if (xlRange.Cells[i, j].Value2.Contains("SID"))
                             {
                                 sidPos = j;     // Detect position index of column "SID"
-                                rowIndex = i + 1; // Detect position index of row 
                             }
                             if (xlRange.Cells[i, j].Value2.Contains("Decimal"))
                             {
@@ -163,7 +168,7 @@ namespace LogFilterApplication
             // https://msdn.microsoft.com/en-us/library/cc296089%28v=office.12%29.aspx?f=255&MSPPError=-2147217396#xlDiscoveringColorIndex_ColorIndexProperty
             try
             {
-                for (i = rowIndex; i < rowCount; i++)
+                for (i = rowStartData; i < dataRowLength; i++)
                 {
                     if (xlRange.Cells[i, sidPos].Value2 != null && xlRange.Cells[i, abbrPos].Value2 != null && xlRange.Cells[i, descPos].Value2 != null &&
                         xlRange.Cells[i, sidPos].Interior.ColorIndex == 2 && xlRange.Cells[i, abbrPos].Interior.ColorIndex == 2)
@@ -173,7 +178,7 @@ namespace LogFilterApplication
                     }
                 }
 
-                for (i = rowIndex; i < rowCount; i++)
+                for (i = rowStartData; i < dataRowLength; i++)
                 {
                     if (xlRange.Cells[i, descPos].Value2 != null && xlRange.Cells[i, descPos].Interior.ColorIndex == 2)
                     {
