@@ -90,14 +90,14 @@
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Location = new System.Drawing.Point(26, 125);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(369, 180);
+            this.groupBox2.Size = new System.Drawing.Size(381, 180);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter Log File";
             // 
             // btnFilter
             // 
-            this.btnFilter.Location = new System.Drawing.Point(234, 78);
+            this.btnFilter.Location = new System.Drawing.Point(277, 78);
             this.btnFilter.Name = "btnFilter";
             this.btnFilter.Size = new System.Drawing.Size(75, 23);
             this.btnFilter.TabIndex = 4;
@@ -109,7 +109,7 @@
             // 
             this.tbUnknownSID.Location = new System.Drawing.Point(9, 124);
             this.tbUnknownSID.Name = "tbUnknownSID";
-            this.tbUnknownSID.Size = new System.Drawing.Size(168, 20);
+            this.tbUnknownSID.Size = new System.Drawing.Size(208, 20);
             this.tbUnknownSID.TabIndex = 3;
             // 
             // textBox1
@@ -138,7 +138,7 @@
             "7ec.622005.24"});
             this.defaultSIDs.Location = new System.Drawing.Point(71, 36);
             this.defaultSIDs.Name = "defaultSIDs";
-            this.defaultSIDs.Size = new System.Drawing.Size(238, 21);
+            this.defaultSIDs.Size = new System.Drawing.Size(281, 21);
             this.defaultSIDs.TabIndex = 1;
             // 
             // label2
