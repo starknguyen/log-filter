@@ -168,7 +168,7 @@ namespace LogFilterApplication
                 try
                 {
                     // Output file at same directory of input file
-                    OutputFileLocation = InputFilePath + "\\" + SidInformation
+                    OutputFileLocation = InputFilePath + "\\" + SidToFind
                                         + "_from_" + InputFileName + "_filtered.log";
                     using (StreamWriter file = new StreamWriter(OutputFileLocation))
                     {
