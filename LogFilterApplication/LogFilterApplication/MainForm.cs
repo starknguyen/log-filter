@@ -90,7 +90,9 @@ namespace LogFilterApplication
             {
                 if (tbUnknownSID.Text == string.Empty && Convert.ToInt16(defaultSIDs.SelectedIndex) != -1)
                 {
-                    SidToFind = defaultSIDs.SelectedItem.ToString(); // User chooses SID from ComboBox
+                    // User chooses SID from ComboBox
+                    SidToFind = defaultSIDs.SelectedItem.ToString().
+                        Remove(defaultSIDs.SelectedItem.ToString().IndexOf("SID") - 2); // Just take the description, ignore the (SID...)
                     
                     // SID in ComboBox is the value in SID_Description, we need to know its key
                     foreach (DictionaryEntry de in SID_Description)

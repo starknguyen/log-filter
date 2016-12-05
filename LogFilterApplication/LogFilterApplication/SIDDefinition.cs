@@ -229,10 +229,5 @@ namespace LogFilterApplication
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
-
-        private void Mapping()
-        {
-
-        }
     }
 }
