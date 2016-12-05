@@ -156,11 +156,11 @@ namespace LogFilterApplication
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
 
-        // Abkürzung is column abbrPos, SID is column sidPos
-        // Store data to KeyValuePair
-        // Available SIDs is categorized as "White color" cells in Excel data file
-        // For more information about ColorIndex property of Excel cell, read here: 
-        // https://msdn.microsoft.com/en-us/library/cc296089%28v=office.12%29.aspx?f=255&MSPPError=-2147217396#xlDiscoveringColorIndex_ColorIndexProperty
+            // Abkürzung is column abbrPos, SID is column sidPos
+            // Store data to KeyValuePair
+            // Available SIDs is categorized as "White color" cells in Excel data file
+            // For more information about ColorIndex property of Excel cell, read here: 
+            // https://msdn.microsoft.com/en-us/library/cc296089%28v=office.12%29.aspx?f=255&MSPPError=-2147217396#xlDiscoveringColorIndex_ColorIndexProperty
             try
             {
                 for (i = rowIndex; i < rowCount; i++)
@@ -168,7 +168,7 @@ namespace LogFilterApplication
                     if (xlRange.Cells[i, sidPos].Value2 != null && xlRange.Cells[i, abbrPos].Value2 != null && xlRange.Cells[i, descPos].Value2 != null &&
                         xlRange.Cells[i, sidPos].Interior.ColorIndex == 2 && xlRange.Cells[i, abbrPos].Interior.ColorIndex == 2)
                     {
-                        //AvailableSIDs.Add(xlRange.Cells[i, sidPos].Value2.ToString(), xlRange.Cells[i, abbrPos].Value2.ToString());                        
+                        // AvailableSIDs = <SID, AbbreviationSID>                     
                         AvailableSIDs.Add(new KeyValuePair<string, string>(xlRange.Cells[i, sidPos].Value2.ToString(), xlRange.Cells[i, abbrPos].Value2.ToString()));                        
                     }
                 }
@@ -177,16 +177,19 @@ namespace LogFilterApplication
                 {
                     if (xlRange.Cells[i, descPos].Value2 != null && xlRange.Cells[i, descPos].Interior.ColorIndex == 2)
                     {
+                        // SID_Mapping_Description = <AvailableSIDs, Description>
                         SID_Mapping_Description.Add(AvailableSIDs[desPosIndex], xlRange.Cells[i, descPos].Value2.ToString());
                         desPosIndex++;
                     }
                     if (xlRange.Cells[i, decPos].Value2 != null && xlRange.Cells[i, decPos].Interior.ColorIndex == 2)
                     {
+                        // SID_Mapping_Decimal = <Description, Decimal>
                         SID_Mapping_Decimal.Add(xlRange.Cells[i, descPos].Value2.ToString(), xlRange.Cells[i, decPos].Value2.ToString());
                         decPosIndex++;
                     }
                     if (xlRange.Cells[i, unitPos].Value2 != null && xlRange.Cells[i, unitPos].Interior.ColorIndex == 2)
                     {
+                        // SID_Mapping_Unit = <Description, Unit>
                         SID_Mapping_Unit.Add(xlRange.Cells[i, descPos].Value2.ToString(), xlRange.Cells[i, unitPos].Value2.ToString());
                         unitPosIndex++;
                     }
