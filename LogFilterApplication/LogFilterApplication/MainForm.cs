@@ -44,9 +44,16 @@ namespace LogFilterApplication
 
             SID_Description = objectSID.GetSIDMappedDescription;
             defaultSIDs.Items.Clear();  // clear first
-            for (int i = 0; i < SID_Description.Count; i++)
+
+            // SID in ComboBox is the value in SID_Description, we need to know its key
+            foreach (DictionaryEntry de in SID_Description)
             {
-                defaultSIDs.Items.Add(SID_Description[i]);
+                // Add item to ComboBox in format: <Beschreibung> (SID <SID>)
+                // Abbrev_SID = de.Key = <SID, AbbreviationSID>   
+                // Abbrev_SID.Key = SID
+                KeyValuePair<string, string> Abbrev_SID = (KeyValuePair<string, string>)de.Key;
+                string sidNumber = Abbrev_SID.Key; // mapping back                    
+                defaultSIDs.Items.Add(de.Value.ToString() + " (SID " + sidNumber + ")");
             }
         }
 
