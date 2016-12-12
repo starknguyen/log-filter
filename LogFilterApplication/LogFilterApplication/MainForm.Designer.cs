@@ -39,8 +39,13 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.defaultSIDs = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbDataSourceLocation = new System.Windows.Forms.TextBox();
+            this.btnBrowseDataSource = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnBrowseInputFile
@@ -74,7 +79,7 @@
             this.groupBox1.Controls.Add(this.btnBrowseInputFile);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.tbInputFileLocation);
-            this.groupBox1.Location = new System.Drawing.Point(26, 12);
+            this.groupBox1.Location = new System.Drawing.Point(26, 130);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(571, 83);
             this.groupBox1.TabIndex = 5;
@@ -88,7 +93,7 @@
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Controls.Add(this.defaultSIDs);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Location = new System.Drawing.Point(26, 125);
+            this.groupBox2.Location = new System.Drawing.Point(26, 248);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(381, 180);
             this.groupBox2.TabIndex = 6;
@@ -150,11 +155,50 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "SID";
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.btnBrowseDataSource);
+            this.groupBox3.Controls.Add(this.tbDataSourceLocation);
+            this.groupBox3.Controls.Add(this.label3);
+            this.groupBox3.Location = new System.Drawing.Point(26, 12);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(571, 79);
+            this.groupBox3.TabIndex = 7;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Choose Data Source";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 33);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(111, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Data Source Location";
+            // 
+            // tbDataSourceLocation
+            // 
+            this.tbDataSourceLocation.Location = new System.Drawing.Point(137, 30);
+            this.tbDataSourceLocation.Name = "tbDataSourceLocation";
+            this.tbDataSourceLocation.Size = new System.Drawing.Size(307, 20);
+            this.tbDataSourceLocation.TabIndex = 1;
+            // 
+            // btnBrowseDataSource
+            // 
+            this.btnBrowseDataSource.Location = new System.Drawing.Point(477, 28);
+            this.btnBrowseDataSource.Name = "btnBrowseDataSource";
+            this.btnBrowseDataSource.Size = new System.Drawing.Size(75, 23);
+            this.btnBrowseDataSource.TabIndex = 2;
+            this.btnBrowseDataSource.Text = "Browse";
+            this.btnBrowseDataSource.UseVisualStyleBackColor = true;
+            this.btnBrowseDataSource.Click += new System.EventHandler(this.btnBrowseDataSource_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(616, 336);
+            this.ClientSize = new System.Drawing.Size(623, 461);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -164,6 +208,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -180,6 +226,10 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ComboBox defaultSIDs;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button btnBrowseDataSource;
+        private System.Windows.Forms.TextBox tbDataSourceLocation;
+        private System.Windows.Forms.Label label3;
     }
 }
 

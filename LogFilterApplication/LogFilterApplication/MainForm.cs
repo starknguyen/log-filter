@@ -15,6 +15,7 @@ namespace LogFilterApplication
     public partial class MainForm : Form
     {
         #region Variables declaration
+        private string DataSourceFileLocation;
         private string InputFileLocation;
         private string InputFilePath;
         private string InputFileName;
@@ -22,6 +23,8 @@ namespace LogFilterApplication
         private string SidToFind;
         private string AbbrevSidToFind;
         private string SidInformation;
+
+        private SIDDefinition objectSID;
 
         private OrderedDictionary SID_Description = new OrderedDictionary();
         private OrderedDictionary SID_Decimal = new OrderedDictionary();
@@ -33,32 +36,45 @@ namespace LogFilterApplication
         private StringBuilder logContent;        
         #endregion
 
-        SIDDefinition objectSID = new SIDDefinition(); // current Excel data has 29 rows        
-
         /// <summary>
         /// Default constructor
         /// </summary>
         public MainForm()
         {
             InitializeComponent();
-
-            SID_Description = objectSID.GetSIDMappedDescription;
             defaultSIDs.Items.Clear();  // clear first
+        }
 
-            // SID in ComboBox is the value in SID_Description, we need to know its key
-            foreach (DictionaryEntry de in SID_Description)
+        /// <summary>
+        /// Button Browse Data Source click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnBrowseDataSource_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "xls files (*.xls)|*.xls| xlsx files (*.xlsx)|*.xlsx";
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
-                // Add item to ComboBox in format: <Beschreibung> (SID <SID>)
-                // Abbrev_SID = de.Key = <SID, AbbreviationSID>   
-                // Abbrev_SID.Key = SID
-                KeyValuePair<string, string> Abbrev_SID = (KeyValuePair<string, string>)de.Key;
-                string sidNumber = Abbrev_SID.Key; // mapping back                    
-                defaultSIDs.Items.Add(de.Value.ToString() + " (SID " + sidNumber + ")");
+                DataSourceFileLocation = dialog.FileName;
+                tbDataSourceLocation.Text = dialog.FileName;
+                objectSID = new SIDDefinition(DataSourceFileLocation);
+                SID_Description = objectSID.GetSIDMappedDescription;
+                // SID in ComboBox is the value in SID_Description, we need to know its key
+                foreach (DictionaryEntry de in SID_Description)
+                {
+                    // Add item to ComboBox in format: <Beschreibung> (SID <SID>)
+                    // Abbrev_SID = de.Key = <SID, AbbreviationSID>   
+                    // Abbrev_SID.Key = SID
+                    KeyValuePair<string, string> Abbrev_SID = (KeyValuePair<string, string>)de.Key;
+                    string sidNumber = Abbrev_SID.Key; // mapping back                    
+                    defaultSIDs.Items.Add(de.Value.ToString() + " (SID " + sidNumber + ")");
+                }
             }
         }
 
         /// <summary>
-        /// Button Browse click event
+        /// Button Browse Input Log File click event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -81,6 +97,12 @@ namespace LogFilterApplication
         /// <param name="e"></param>
         private void btnFilter_Click(object sender, EventArgs e)
         {
+            if (tbDataSourceLocation.Text == string.Empty)
+            {
+                MessageBox.Show(this, "Please choose Excel data source", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
             if (tbInputFileLocation.Text == string.Empty)
             {
                 MessageBox.Show(this, "Please choose log file to filter", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
