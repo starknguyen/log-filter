@@ -174,6 +174,15 @@ namespace LogFilterApplication
                         // AvailableSIDs = <SID, AbbreviationSID>                     
                         AvailableSIDs.Add(new KeyValuePair<string, string>(xlRange.Cells[i, sidPos].Value2.ToString(), xlRange.Cells[i, abbrPos].Value2.ToString()));                        
                     }
+#if DEBUG
+                    else
+                    {
+                        if (xlRange.Cells[i, sidPos].Value2 != null && xlRange.Cells[i, abbrPos].Value2 != null && xlRange.Cells[i, descPos].Value2 != null)
+                        {
+                            string cellContent = xlRange.Cells[i, sidPos].Value2.ToString();
+                        }
+                    } 
+#endif
                 }
 
                 for (i = rowStartData; i <= dataRowLength; i++)
