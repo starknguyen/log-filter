@@ -168,7 +168,7 @@ namespace LogFilterApplication
             // https://msdn.microsoft.com/en-us/library/cc296089%28v=office.12%29.aspx?f=255&MSPPError=-2147217396#xlDiscoveringColorIndex_ColorIndexProperty
             try
             {
-                for (i = rowStartData; i < dataRowLength; i++)
+                for (i = rowStartData; i <= dataRowLength; i++)
                 {
                     if (xlRange.Cells[i, sidPos].Value2 != null && xlRange.Cells[i, abbrPos].Value2 != null && xlRange.Cells[i, descPos].Value2 != null &&
                         xlRange.Cells[i, sidPos].Interior.ColorIndex == 2 && xlRange.Cells[i, abbrPos].Interior.ColorIndex == 2)
@@ -178,7 +178,7 @@ namespace LogFilterApplication
                     }
                 }
 
-                for (i = rowStartData; i < dataRowLength; i++)
+                for (i = rowStartData; i <= dataRowLength; i++)
                 {
                     if (xlRange.Cells[i, descPos].Value2 != null && xlRange.Cells[i, descPos].Interior.ColorIndex == 2)
                     {
