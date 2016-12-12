@@ -68,11 +68,9 @@ namespace LogFilterApplication
         /// Constructor with length of data as parameter
         /// </summary>
         /// <param name="dataRowLength"></param>
-        public SIDDefinition()
+        public SIDDefinition(string dataSourceLocation)
         {
-            // Data source location
-            //string dataSourceLocation = "D:\\Workplace\\Git Repository\\log-filter\\LogFilterApplication\\LogFilterApplication\\Data Sources\\Messstellenliste Renault ZOE.xlsx";
-            string dataSourceLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Data Sources\\Messstellenliste Renault ZOE.xlsx";
+            // Data source location                       
             int i = 1, j = 1;
 
             //Create COM Objects. Create a COM object for everything that is referenced
@@ -168,7 +166,7 @@ namespace LogFilterApplication
             // https://msdn.microsoft.com/en-us/library/cc296089%28v=office.12%29.aspx?f=255&MSPPError=-2147217396#xlDiscoveringColorIndex_ColorIndexProperty
             try
             {
-                for (i = rowStartData; i < dataRowLength; i++)
+                for (i = rowStartData; i <= dataRowLength; i++)
                 {
                     if (xlRange.Cells[i, sidPos].Value2 != null && xlRange.Cells[i, abbrPos].Value2 != null && xlRange.Cells[i, descPos].Value2 != null &&
                         xlRange.Cells[i, sidPos].Interior.ColorIndex == 2 && xlRange.Cells[i, abbrPos].Interior.ColorIndex == 2)
@@ -176,9 +174,18 @@ namespace LogFilterApplication
                         // AvailableSIDs = <SID, AbbreviationSID>                     
                         AvailableSIDs.Add(new KeyValuePair<string, string>(xlRange.Cells[i, sidPos].Value2.ToString(), xlRange.Cells[i, abbrPos].Value2.ToString()));                        
                     }
+#if DEBUG
+                    else
+                    {
+                        if (xlRange.Cells[i, sidPos].Value2 != null && xlRange.Cells[i, abbrPos].Value2 != null && xlRange.Cells[i, descPos].Value2 != null)
+                        {
+                            string cellContent = xlRange.Cells[i, sidPos].Value2.ToString();
+                        }
+                    } 
+#endif
                 }
 
-                for (i = rowStartData; i < dataRowLength; i++)
+                for (i = rowStartData; i <= dataRowLength; i++)
                 {
                     if (xlRange.Cells[i, descPos].Value2 != null && xlRange.Cells[i, descPos].Interior.ColorIndex == 2)
                     {

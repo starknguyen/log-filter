@@ -15,13 +15,17 @@ namespace LogFilterApplication
     public partial class MainForm : Form
     {
         #region Variables declaration
+        private string DataSourceFileLocation;
         private string InputFileLocation;
         private string InputFilePath;
         private string InputFileName;
         private string OutputFileLocation;
         private string SidToFind;
         private string AbbrevSidToFind;
+        private string SidNumberToFind;
         private string SidInformation;
+
+        private SIDDefinition objectSID;
 
         private OrderedDictionary SID_Description = new OrderedDictionary();
         private OrderedDictionary SID_Decimal = new OrderedDictionary();
@@ -33,32 +37,45 @@ namespace LogFilterApplication
         private StringBuilder logContent;        
         #endregion
 
-        SIDDefinition objectSID = new SIDDefinition(); // current Excel data has 29 rows        
-
         /// <summary>
         /// Default constructor
         /// </summary>
         public MainForm()
         {
             InitializeComponent();
-
-            SID_Description = objectSID.GetSIDMappedDescription;
             defaultSIDs.Items.Clear();  // clear first
+        }
 
-            // SID in ComboBox is the value in SID_Description, we need to know its key
-            foreach (DictionaryEntry de in SID_Description)
+        /// <summary>
+        /// Button Browse Data Source click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnBrowseDataSource_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *xlsx";
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
-                // Add item to ComboBox in format: <Beschreibung> (SID <SID>)
-                // Abbrev_SID = de.Key = <SID, AbbreviationSID>   
-                // Abbrev_SID.Key = SID
-                KeyValuePair<string, string> Abbrev_SID = (KeyValuePair<string, string>)de.Key;
-                string sidNumber = Abbrev_SID.Key; // mapping back                    
-                defaultSIDs.Items.Add(de.Value.ToString() + " (SID " + sidNumber + ")");
+                DataSourceFileLocation = dialog.FileName;
+                tbDataSourceLocation.Text = dialog.FileName;
+                objectSID = new SIDDefinition(DataSourceFileLocation);
+                SID_Description = objectSID.GetSIDMappedDescription;
+                // SID in ComboBox is the value in SID_Description, we need to know its key
+                foreach (DictionaryEntry de in SID_Description)
+                {
+                    // Add item to ComboBox in format: <Beschreibung> (SID <SID>)
+                    // Abbrev_SID = de.Key = <SID, AbbreviationSID>   
+                    // Abbrev_SID.Key = SID
+                    KeyValuePair<string, string> Abbrev_SID = (KeyValuePair<string, string>)de.Key;
+                    string sidNumber = Abbrev_SID.Key; // mapping back                    
+                    defaultSIDs.Items.Add(de.Value.ToString() + " (SID " + sidNumber + ")");
+                }
             }
         }
 
         /// <summary>
-        /// Button Browse click event
+        /// Button Browse Input Log File click event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -81,6 +98,16 @@ namespace LogFilterApplication
         /// <param name="e"></param>
         private void btnFilter_Click(object sender, EventArgs e)
         {
+            // = 1: comboBox
+            // = 2: textBox
+            int filterMethod = 0;
+
+            if (tbDataSourceLocation.Text == string.Empty)
+            {
+                MessageBox.Show(this, "Please choose Excel data source", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
             if (tbInputFileLocation.Text == string.Empty)
             {
                 MessageBox.Show(this, "Please choose log file to filter", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -90,44 +117,15 @@ namespace LogFilterApplication
             {
                 if (tbUnknownSID.Text == string.Empty && Convert.ToInt16(defaultSIDs.SelectedIndex) != -1)
                 {
-                    // User chooses SID from ComboBox
-                    SidToFind = defaultSIDs.SelectedItem.ToString().
-                        Remove(defaultSIDs.SelectedItem.ToString().IndexOf("SID") - 2); // Just take the description, ignore the (SID...)
-                    
-                    // SID in ComboBox is the value in SID_Description, we need to know its key
-                    foreach (DictionaryEntry de in SID_Description)
-                    {
-                        if (SidToFind == de.Value.ToString())
-                        {
-                            KeyValuePair<string, string> Abbrev_SID = (KeyValuePair<string, string>)de.Key;
-                            AbbrevSidToFind = Abbrev_SID.Key; // mapping back
-                            SidInformation = Abbrev_SID.Value;
-                            break;
-                        }
-                    }
-
-                    SID_Decimal = objectSID.GetSIDMappedDecimal;
-                    foreach (DictionaryEntry de in SID_Decimal)
-                    {
-                        if (SidToFind == de.Key.ToString())
-                        {
-                            DecimalDiv = Convert.ToInt32(de.Value);
-                            break;
-                        }
-                    }
-
-                    SID_Unit = objectSID.GetSIDMappedUnit;
-                    foreach (DictionaryEntry de in SID_Unit)
-                    {
-                        if (SidToFind == de.Key.ToString())
-                        {
-                            OutputUnit = de.Value.ToString();
-                            break;
-                        }
-                    }
+                    FilteringMethod("InFilterList");
+                    filterMethod = 1;
                 }
                 else if (tbUnknownSID.Text != string.Empty && Convert.ToInt16(defaultSIDs.SelectedIndex) == -1)
+                {
                     SidToFind = tbUnknownSID.Text;  // User enters SID value not listed in ComboBox
+                    filterMethod = 2;
+                    //FilteringMethod("NotInFilterList");
+                }
                 else
                 {
                     MessageBox.Show(this, "Please choose filter condition!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -147,11 +145,15 @@ namespace LogFilterApplication
                 for (int i = 1; i < linesLog.Capacity; i++) // ignore first line
                 {
                     elements = linesLog[i].Split(',');
+                    if (filterMethod == 2)
+                    {
+                        AbbrevSidToFind = SidToFind; // Not abbrev anymore
+                    }
                     if (elements.Contains(AbbrevSidToFind))
                     {
                         // Processing output format
                         elements[2] = ExtensionMethods.ShiftDecimalPoint(Convert.ToDouble(elements[2]), DecimalDiv);
-                                         
+
                         logContent.AppendLine(elements[0] + ',' + elements[1] + ',' + elements[2] + " " + OutputUnit);
                         isElementFound = true;
                     }
@@ -190,6 +192,57 @@ namespace LogFilterApplication
                     MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 defaultSIDs.SelectedIndex = -1;
             }
+        }
+
+        private void FilteringMethod(string method)
+        {
+            switch (method)
+            {
+                case "NotInFilterList":
+                    // User enters SID in textbox
+                    // It may be like this: "Karhu 658.33 abcxyz"
+                    // Just ignore the invalid part
+
+                    break;
+
+                case "InFilterList":
+                    // User chooses SID from ComboBox
+                    SidToFind = defaultSIDs.SelectedItem.ToString().
+                        Remove(defaultSIDs.SelectedItem.ToString().IndexOf("SID") - 2); // Just take the description, ignore the (SID...)
+
+                    // SID in ComboBox is the value in SID_Description, we need to know its key
+                    foreach (DictionaryEntry de in SID_Description)
+                    {
+                        if (SidToFind == de.Value.ToString())
+                        {
+                            KeyValuePair<string, string> Abbrev_SID = (KeyValuePair<string, string>)de.Key;
+                            AbbrevSidToFind = Abbrev_SID.Key; // mapping back
+                            SidInformation = Abbrev_SID.Value;
+                            break;
+                        }
+                    }
+
+                    SID_Decimal = objectSID.GetSIDMappedDecimal;
+                    foreach (DictionaryEntry de in SID_Decimal)
+                    {
+                        if (SidToFind == de.Key.ToString())
+                        {
+                            DecimalDiv = Convert.ToInt32(de.Value);
+                            break;
+                        }
+                    }
+
+                    SID_Unit = objectSID.GetSIDMappedUnit;
+                    foreach (DictionaryEntry de in SID_Unit)
+                    {
+                        if (SidToFind == de.Key.ToString())
+                        {
+                            OutputUnit = de.Value.ToString();
+                            break;
+                        }
+                    }
+                    break; 
+            }            
         }
     }
 }
