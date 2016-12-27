@@ -234,6 +234,10 @@ namespace LogFilterApplication
                 //quit and release
                 xlApp.Quit();
                 Marshal.ReleaseComObject(xlApp);
+
+                // Message show that loading data file is complete
+                MessageBox.Show("Loading data file completed!", "Information", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
             catch (Exception ex)
             {
