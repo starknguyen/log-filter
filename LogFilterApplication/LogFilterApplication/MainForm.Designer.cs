@@ -40,9 +40,11 @@
             this.defaultSIDs = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbDataSourceLocation = new System.Windows.Forms.TextBox();
             this.btnBrowseDataSource = new System.Windows.Forms.Button();
+            this.tbDataSourceLocation = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cbFileType = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -88,6 +90,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.cbFileType);
             this.groupBox2.Controls.Add(this.btnFilter);
             this.groupBox2.Controls.Add(this.tbUnknownSID);
             this.groupBox2.Controls.Add(this.textBox1);
@@ -95,7 +99,7 @@
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Location = new System.Drawing.Point(26, 248);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(381, 180);
+            this.groupBox2.Size = new System.Drawing.Size(571, 180);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter Log File";
@@ -167,22 +171,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Choose Data Source";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 33);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(111, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Data Source Location";
-            // 
-            // tbDataSourceLocation
-            // 
-            this.tbDataSourceLocation.Location = new System.Drawing.Point(137, 30);
-            this.tbDataSourceLocation.Name = "tbDataSourceLocation";
-            this.tbDataSourceLocation.Size = new System.Drawing.Size(307, 20);
-            this.tbDataSourceLocation.TabIndex = 1;
-            // 
             // btnBrowseDataSource
             // 
             this.btnBrowseDataSource.Location = new System.Drawing.Point(477, 28);
@@ -192,6 +180,42 @@
             this.btnBrowseDataSource.Text = "Browse";
             this.btnBrowseDataSource.UseVisualStyleBackColor = true;
             this.btnBrowseDataSource.Click += new System.EventHandler(this.btnBrowseDataSource_Click);
+            // 
+            // tbDataSourceLocation
+            // 
+            this.tbDataSourceLocation.Location = new System.Drawing.Point(137, 30);
+            this.tbDataSourceLocation.Name = "tbDataSourceLocation";
+            this.tbDataSourceLocation.Size = new System.Drawing.Size(307, 20);
+            this.tbDataSourceLocation.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 33);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(111, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Data Source Location";
+            // 
+            // cbFileType
+            // 
+            this.cbFileType.FormattingEnabled = true;
+            this.cbFileType.Items.AddRange(new object[] {
+            ".xls",
+            ".csv"});
+            this.cbFileType.Location = new System.Drawing.Point(490, 36);
+            this.cbFileType.Name = "cbFileType";
+            this.cbFileType.Size = new System.Drawing.Size(65, 21);
+            this.cbFileType.TabIndex = 5;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(396, 39);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(78, 13);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Output file type";
             // 
             // MainForm
             // 
@@ -230,6 +254,8 @@
         private System.Windows.Forms.Button btnBrowseDataSource;
         private System.Windows.Forms.TextBox tbDataSourceLocation;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cbFileType;
     }
 }
 

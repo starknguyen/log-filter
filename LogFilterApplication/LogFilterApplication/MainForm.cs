@@ -7,8 +7,10 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace LogFilterApplication
 {
@@ -140,6 +142,25 @@ namespace LogFilterApplication
             logContent = new StringBuilder();
             bool isElementFound = false;
 
+            // Create a new Excel application
+            Excel.Application xlApp = new Excel.Application();
+
+            if (xlApp == null)
+            {
+                MessageBox.Show(this, "Excel application was not found!", "Error", MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
+
+            Excel.Workbook xlWorkBook;
+            Excel.Worksheet xlWorkSheet;
+            object misValue = System.Reflection.Missing.Value;
+            int rowIndex = 1;
+
+            xlWorkBook = xlApp.Workbooks.Add(misValue);
+            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
             try
             {
                 for (int i = 1; i < linesLog.Capacity; i++) // ignore first line
@@ -154,7 +175,20 @@ namespace LogFilterApplication
                         // Processing output format
                         elements[2] = ExtensionMethods.ShiftDecimalPoint(Convert.ToDouble(elements[2]), DecimalDiv);
 
+                        // Append to log TEXT file
                         logContent.AppendLine(elements[0] + ',' + elements[1] + ',' + elements[2] + " " + OutputUnit);
+
+                        // Add elements to Excel cells
+                        xlWorkSheet.Cells[1, 1] = "Date";
+                        xlWorkSheet.Cells[1, 2] = "SID";
+                        xlWorkSheet.Cells[1, 3] = "Value";
+                        xlWorkSheet.Cells[1, 4] = "Unit";
+                        rowIndex++;
+                        xlWorkSheet.Cells[rowIndex, 1] = elements[0];
+                        xlWorkSheet.Cells[rowIndex, 2] = elements[1];
+                        xlWorkSheet.Cells[rowIndex, 3] = elements[2];
+                        xlWorkSheet.Cells[rowIndex, 4] = OutputUnit;
+
                         isElementFound = true;
                     }
                 }
@@ -171,8 +205,30 @@ namespace LogFilterApplication
                 {
                     // Output file at same directory of input file
                     OutputFileLocation = InputFilePath + "\\" + SidToFind
-                                        + "_from_" + InputFileName + "_filtered.log";
-                    using (StreamWriter file = new StreamWriter(OutputFileLocation))
+                                        + "_from_" + InputFileName;
+
+                    if (cbFileType.SelectedItem == null)
+                    {
+                        MessageBox.Show(this, "Please choose output file type!", "Error", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
+                    if (cbFileType.SelectedItem.ToString() == ".csv")
+                        OutputFileLocation += "_filtered.csv";
+                    else if (cbFileType.SelectedItem.ToString() == ".xls")
+                        OutputFileLocation += "_filtered.xls";
+
+                    // Output Excel file with extension .csv
+                    xlWorkBook.SaveAs(OutputFileLocation, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                    xlWorkBook.Close(true, misValue, misValue);
+                    xlApp.Quit();
+
+                    Marshal.ReleaseComObject(xlWorkSheet);
+                    Marshal.ReleaseComObject(xlWorkBook);
+                    Marshal.ReleaseComObject(xlApp);
+
+                    using (StreamWriter file = new StreamWriter(OutputFileLocation + "_filtered.log"))  // extenstion .log
                     {
                         file.Write(logContent);
                     }
