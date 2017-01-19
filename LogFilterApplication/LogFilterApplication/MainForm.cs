@@ -33,7 +33,7 @@ namespace LogFilterApplication
         private OrderedDictionary SID_Decimal = new OrderedDictionary();
         private OrderedDictionary SID_Unit = new OrderedDictionary();
 
-        private int DecimalDiv = 1;
+        private int DecimalDiv = -1;
         private string OutputUnit;
 
         private StringBuilder logContent;        

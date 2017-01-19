@@ -11,6 +11,10 @@ namespace LogFilterApplication
         {
             string retVal = "";
 
+            if (decimalToShift == -1)
+            {
+                return inputNumber.ToString();
+            }
             inputNumber /= Math.Pow(10.0, decimalToShift);
             retVal = inputNumber.ToString();
 
