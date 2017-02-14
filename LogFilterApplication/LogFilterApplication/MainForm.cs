@@ -36,6 +36,10 @@ namespace LogFilterApplication
         private int DecimalDiv = -1;
         private string OutputUnit;
 
+        private Excel.Workbook xlWorkBook;
+        private Excel.Worksheet xlWorkSheet;
+        private Excel.Application xlApp;
+
         private StringBuilder logContent;        
         #endregion
 
@@ -143,7 +147,7 @@ namespace LogFilterApplication
             bool isElementFound = false;
 
             // Create a new Excel application
-            Excel.Application xlApp = new Excel.Application();
+            xlApp = new Excel.Application();
 
             if (xlApp == null)
             {
@@ -153,8 +157,7 @@ namespace LogFilterApplication
             }
 
 
-            Excel.Workbook xlWorkBook;
-            Excel.Worksheet xlWorkSheet;
+            
             object misValue = System.Reflection.Missing.Value;
             int rowIndex = 1;
 
@@ -176,6 +179,7 @@ namespace LogFilterApplication
                         elements[2] = ExtensionMethods.ShiftDecimalPoint(Convert.ToDouble(elements[2]), DecimalDiv);
 
                         // Append to log TEXT file
+                        // DateTime, SID, Value, Unit
                         logContent.AppendLine(elements[0] + ',' + elements[1] + ',' + elements[2] + " " + OutputUnit);
 
                         // Add elements to Excel cells
@@ -248,8 +252,14 @@ namespace LogFilterApplication
                     MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 defaultSIDs.SelectedIndex = -1;
             }
+
+            tbUnknownSID.Text = ""; // Clear SID text box
         }
 
+        /// <summary>
+        /// Filter method
+        /// </summary>
+        /// <param name="method">Whether SID is in Excel data source or not</param>
         private void FilteringMethod(string method)
         {
             switch (method)
@@ -298,6 +308,31 @@ namespace LogFilterApplication
                         }
                     }
                     break; 
+            }            
+        }
+
+        /// <summary>
+        /// Event happens when closing form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Make sure even if no SID was found, Excel app must be closed
+            try
+            {
+                if (xlWorkBook != null && xlWorkSheet != null && xlApp != null)
+                {
+                    xlApp.Quit();
+                    Marshal.ReleaseComObject(xlWorkSheet);
+                    Marshal.ReleaseComObject(xlWorkBook);
+                    Marshal.ReleaseComObject(xlApp); 
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "Error while trying to close application: " + ex, "Error", MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }            
         }
     }
