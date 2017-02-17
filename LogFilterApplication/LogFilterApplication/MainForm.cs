@@ -162,7 +162,7 @@ namespace LogFilterApplication
             int rowIndex = 1;
 
             xlWorkBook = xlApp.Workbooks.Add(misValue);
-            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);            
 
             try
             {
@@ -189,13 +189,15 @@ namespace LogFilterApplication
                         xlWorkSheet.Cells[1, 4] = "Unit";
                         rowIndex++;
                         xlWorkSheet.Cells[rowIndex, 1] = elements[0];
-                        xlWorkSheet.Cells[rowIndex, 2] = elements[1];
+                        xlWorkSheet.Cells[rowIndex, 2].NumberFormat = "@"; // 17.02.2017: Prevent data cell from missing last "0" digit
+                        xlWorkSheet.Cells[rowIndex, 2] = elements[1];                        
                         xlWorkSheet.Cells[rowIndex, 3] = elements[2];
                         xlWorkSheet.Cells[rowIndex, 4] = OutputUnit;
-
+                                              
                         isElementFound = true;
                     }
                 }
+                           
             }
             catch (Exception ex)
             {
@@ -223,14 +225,11 @@ namespace LogFilterApplication
                     else if (cbFileType.SelectedItem.ToString() == ".xls")
                         OutputFileLocation += "_filtered.xls";
 
-                    // Output Excel file with extension .csv
-                    xlWorkBook.SaveAs(OutputFileLocation, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-                    xlWorkBook.Close(true, misValue, misValue);
-                    xlApp.Quit();
-
-                    Marshal.ReleaseComObject(xlWorkSheet);
-                    Marshal.ReleaseComObject(xlWorkBook);
-                    Marshal.ReleaseComObject(xlApp);
+                    // Output Excel file with extension .csv or .xls
+                    xlWorkBook.SaveAs(OutputFileLocation, Excel.XlFileFormat.xlWorkbookNormal, 
+                        misValue, misValue, misValue, misValue, 
+                        Excel.XlSaveAsAccessMode.xlNoChange, misValue, misValue, misValue, misValue, misValue);
+                    xlWorkBook.Close(true, misValue, misValue);                    
 
                     using (StreamWriter file = new StreamWriter(OutputFileLocation + "_filtered.log"))  // extenstion .log
                     {
